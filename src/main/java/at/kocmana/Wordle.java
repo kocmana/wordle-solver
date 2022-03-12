@@ -19,7 +19,7 @@ public class Wordle {
 
   public Wordle() {
     this.playwright = Playwright.create();
-    this.browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
+    this.browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true).setSlowMo(50));
     this.page = browser.newPage();
     page.navigate("https://www.powerlanguage.co.uk/wordle/");
   }

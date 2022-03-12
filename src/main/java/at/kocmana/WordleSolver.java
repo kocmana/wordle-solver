@@ -1,5 +1,7 @@
 package at.kocmana;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,8 +9,8 @@ public class WordleSolver {
 
   private static final Logger LOG = LoggerFactory.getLogger(WordleSolver.class);
 
-  private final Dictionary dictionary;
-  private final Wordle wordle;
+  private Dictionary dictionary;
+  private Wordle wordle;
 
   public static void main(String[] args) {
     new WordleSolver().solve();
@@ -16,8 +18,17 @@ public class WordleSolver {
 
   private WordleSolver() {
     LOG.info("Setting up...");
-    this.dictionary = Dictionary.getInstance();
-    this.wordle = new Wordle();
+    var dictionaryFuture = CompletableFuture.supplyAsync(Dictionary::getInstance);
+    var wordleFuture = CompletableFuture.supplyAsync(Wordle::new);
+
+    CompletableFuture<Void> requiredResources = CompletableFuture.allOf(dictionaryFuture, wordleFuture);
+    try {
+      requiredResources.get();
+      this.dictionary = dictionaryFuture.get();
+      this.wordle = wordleFuture.get();
+    } catch (Exception e) {
+      LOG.error("Could not setup Wordle Solver: {}", e.getMessage());
+    }
   }
 
   public void solve() {
