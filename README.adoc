@@ -1,0 +1,41 @@
+:toc: macro
+:toclevels: 3
+:toc-title: Table of Contents
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :point_right:
+:important-caption: :loudspeaker:
+:caution-caption: :rotating_light:
+:warning-caption: :warning:
+endif::[]
+
+= Yet Another Wordle Solver
+
+image:https://github.com/kocmana/wordle-solver/actions/workflows/maven.yml/badge.svg[]
+
+toc::[]
+
+== About the Project
+Wordle Solver is based on an idea presented in a stream by https://github.com/TomCools/playwright-wordle[Tom Cools] as well as by a rather interesting as well as extremely over-engineered take on https://www.youtube.com/watch?v=5--tDQIMqhY[the potential logic behind a Wordle Checker].
+
+While the number of Wordle solvers in the wild is legion, both inputs got me interested in trying one solution myself. Similar to the link above, the interaction with the website in question was done using https://playwright.dev/[Microsoft Playwright] rather than Selenium.
+
+NOTE: The application is currently not more than an unrefined Proof Of Concept.
+
+== Stack
+
+* Java 17
+* Maven
+* Microsoft Playwright
+
+== Getting started
+
+Since this project is currently not more than a POC, both codebase and usability are unrefined - to put it mildly.
+
+The application currently expects a `words.txt` in the application's folder. During testing of this application, the word list provided in https://github.com/dwyl/english-words[this repository] was used (https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt[direct link]).
+
+== References
+
+* https://github.com/TomCools/playwright-wordle
+* https://github.com/dwyl/english-words
