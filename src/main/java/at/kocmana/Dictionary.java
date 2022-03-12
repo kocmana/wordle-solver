@@ -3,12 +3,8 @@ package at.kocmana;
 import static java.util.Objects.isNull;
 
 import at.kocmana.model.Result;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Dictionary {
@@ -25,17 +21,7 @@ public class Dictionary {
   }
 
   private Dictionary() {
-    var wordleEligibleWords = Pattern.compile("[a-z]{5}").asMatchPredicate();
-
-    var path = Path.of("words.txt");
-    try {
-      words = Files.lines(path)
-          .map(String::toLowerCase)
-          .filter(wordleEligibleWords)
-          .collect(Collectors.toList()); // we need a mutable list here, this is however not an issue
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not find dictionary");
-    }
+    this.words = DictionaryRepository.prepareDictionary().and().parseWordList();
   }
 
   public void filterBasedOnResult(Result result) {
@@ -49,7 +35,7 @@ public class Dictionary {
   }
 
   public String pickWordAtRandomAndRemove() {
-    if(!this.hasWordsLeft()) {
+    if (!this.hasWordsLeft()) {
       throw new IllegalStateException("Dictionary has no more words for the combination of results");
     }
     var index = random.nextInt(words.size());
