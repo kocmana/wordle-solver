@@ -1,25 +1,29 @@
 package at.kocmana;
 
-import static java.util.Objects.isNull;
-
 import at.kocmana.model.LetterResult;
 import at.kocmana.model.LetterState;
 import at.kocmana.model.Result;
-import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
+
+import static java.util.Objects.isNull;
 
 public class Wordle {
 
+  private static final Logger LOG = LoggerFactory.getLogger(Wordle.class);
+
   private final Playwright playwright;
-  private final Browser browser;
   private final Page page;
 
   public Wordle() {
+    LOG.info("Setting up Wordle instance");
     this.playwright = Playwright.create();
-    this.browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true).setSlowMo(50));
+    var browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
     this.page = browser.newPage();
     page.navigate("https://www.powerlanguage.co.uk/wordle/");
   }
@@ -47,8 +51,8 @@ public class Wordle {
     return page.locator("div[data-state=\"tbd\"]").count() == 0;
   }
 
-  public Result analyzeResultsFor(String word) {
-    var wordSelector = String.format("game-row[letters=\"%s\"]", word);
+  public Result analyzeResultsFor(String guessedWord) {
+    var wordSelector = String.format("game-row[letters=\"%s\"]", guessedWord);
     var elementHandles = page.querySelector(wordSelector).querySelectorAll("game-tile");
 
     var letters = new ArrayList<LetterResult>();

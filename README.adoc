@@ -21,7 +21,7 @@ Wordle Solver is based on an idea presented in a stream by https://github.com/To
 
 While the number of Wordle solvers in the wild is legion, both inputs got me interested in trying one solution myself. Similar to the link above, the interaction with the website in question was done using https://playwright.dev/[Microsoft Playwright] rather than Selenium.
 
-NOTE: The application is currently not more than an unrefined Proof Of Concept.
+NOTE: The application is an unrefined Proof Of Concept, feel free to use as a basis for improvements.
 
 == Stack
 
@@ -30,8 +30,6 @@ NOTE: The application is currently not more than an unrefined Proof Of Concept.
 * Microsoft Playwright
 
 == Getting started
-
-Since this project is currently not more than a POC, both codebase is unrefined - to put it mildly.
 
 The application currently expects a `words.txt` in the application's folder. If none is provided, the application will try to download a word list from https://github.com/dwyl/english-words[this repository] (https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt[direct link]).
 

@@ -1,9 +1,9 @@
 package at.kocmana;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.CompletableFuture;
 
 public class WordleSolver {
 
@@ -27,7 +27,8 @@ public class WordleSolver {
       this.dictionary = dictionaryFuture.get();
       this.wordle = wordleFuture.get();
     } catch (Exception e) {
-      LOG.error("Could not setup Wordle Solver: {}", e.getMessage());
+      Thread.currentThread().interrupt();
+      exitWithMessage("Could not setup WordleSolver: {}", e.getMessage());
     }
   }
 
@@ -43,7 +44,8 @@ public class WordleSolver {
       try {
         Thread.sleep(2000);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        Thread.currentThread().interrupt();
+        exitWithMessage("Thread was interrupted while waiting for wordle input: {}", e.getMessage());
       }
 
       if (!wordle.entryWasAccepted()) {
@@ -55,7 +57,7 @@ public class WordleSolver {
       var result = wordle.analyzeResultsFor(guess);
       LOG.debug("Result was:\r\n\t{}", result);
 
-      if(result.isVictory()){
+      if (result.isVictory()) {
         LOG.info("Victory!");
         break;
       }
@@ -68,4 +70,9 @@ public class WordleSolver {
     wordle.close();
   }
 
+  private void exitWithMessage(String message, Object... messageArguments) {
+    wordle.close();
+    LOG.error(message, messageArguments);
+    System.exit(-1);
+  }
 }
