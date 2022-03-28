@@ -1,17 +1,16 @@
 package at.kocmana;
 
+import static java.util.Objects.isNull;
+
 import at.kocmana.model.LetterResult;
 import at.kocmana.model.LetterState;
 import at.kocmana.model.Result;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-
-import static java.util.Objects.isNull;
 
 public class Wordle {
 
@@ -23,7 +22,7 @@ public class Wordle {
   public Wordle() {
     LOG.info("Setting up Wordle instance");
     this.playwright = Playwright.create();
-    var browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
+    var browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true).setSlowMo(50));
     this.page = browser.newPage();
     page.navigate("https://www.powerlanguage.co.uk/wordle/");
   }

@@ -1,9 +1,9 @@
 package at.kocmana;
 
+import at.kocmana.wordpicker.LetterVariancePicker;
+import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.CompletableFuture;
 
 public class WordleSolver {
 
@@ -18,7 +18,7 @@ public class WordleSolver {
 
   private WordleSolver() {
     LOG.info("Setting up...");
-    var dictionaryFuture = CompletableFuture.supplyAsync(Dictionary::getInstance);
+    var dictionaryFuture = CompletableFuture.supplyAsync(() -> Dictionary.withPicker(new LetterVariancePicker()));
     var wordleFuture = CompletableFuture.supplyAsync(Wordle::new);
 
     CompletableFuture<Void> requiredResources = CompletableFuture.allOf(dictionaryFuture, wordleFuture);
@@ -38,7 +38,7 @@ public class WordleSolver {
     LOG.info("Starting to guess...");
     while (wordle.hasGuessesLeft() && dictionary.hasWordsLeft()) {
 
-      var guess = dictionary.pickWordAtRandomAndRemove();
+      var guess = dictionary.pickWordAndRemove();
       LOG.info("Trying {}", guess);
       wordle.type(guess);
       try {

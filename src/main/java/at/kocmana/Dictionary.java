@@ -1,23 +1,22 @@
 package at.kocmana;
 
-import static java.util.Objects.isNull;
-
 import at.kocmana.model.Result;
+import at.kocmana.wordpicker.WordPicker;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Dictionary {
 
-  private static Dictionary instance;
-  private final Random random = new Random();
+  private WordPicker wordPicker;
   private List<String> words;
 
-  public static Dictionary getInstance() {
-    if (isNull(instance)) {
-      instance = new Dictionary();
-    }
-    return instance;
+  public static Dictionary withPicker(WordPicker wordPicker) {
+    return new Dictionary(wordPicker);
+  }
+
+  private Dictionary(WordPicker wordPicker) {
+    this.wordPicker = wordPicker;
+    this.words = DictionaryRepository.prepareDictionary().and().parseWordList();
   }
 
   private Dictionary() {
@@ -34,13 +33,12 @@ public class Dictionary {
     return !words.isEmpty();
   }
 
-  public String pickWordAtRandomAndRemove() {
+  public String pickWordAndRemove() {
     if (!this.hasWordsLeft()) {
       throw new IllegalStateException("Dictionary has no more words for the combination of results");
     }
-    var index = random.nextInt(words.size());
-    var pick = words.get(index);
-    words.remove(index);
+    var pick = wordPicker.pickWord(words);
+    words.remove(pick);
     return pick;
   }
 
